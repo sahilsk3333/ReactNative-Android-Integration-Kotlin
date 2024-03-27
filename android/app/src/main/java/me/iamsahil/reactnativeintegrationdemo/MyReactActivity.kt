@@ -1,6 +1,7 @@
 package me.iamsahil.reactnativeintegrationdemo
 
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
 import com.facebook.react.BuildConfig
 import com.facebook.react.PackageList
@@ -19,9 +20,9 @@ class MainActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
         super.onCreate(savedInstanceState)
         SoLoader.init(this, false)
         reactRootView = ReactRootView(this)
-        val packages: List<ReactPackage> = PackageList(application).packages
+        val packages: MutableList<ReactPackage> = PackageList(application).packages
         // Packages that cannot be autolinked yet can be added manually here, for example:
-//         packages.add(MyReactNativePackage())
+         packages.add(MyReactNativePackage())
         // Remember to include them in `settings.gradle` and `app/build.gradle` too.
         reactInstanceManager = ReactInstanceManager.builder()
             .setApplication(application)
@@ -55,6 +56,14 @@ class MainActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
     override fun onResume() {
         super.onResume()
         reactInstanceManager.onHostResume(this, this)
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            reactInstanceManager.showDevOptionsDialog()
+            return true
+        }
+        return super.onKeyUp(keyCode, event)
     }
 
     override fun onDestroy() {
