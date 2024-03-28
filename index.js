@@ -6,7 +6,7 @@ const HelloWorld = () => {
         const eventEmitter = new NativeEventEmitter();
         const subscription = eventEmitter.addListener('EventDataFromNative', (data) => {
             console.log('Received data from native:', data.message);
-            sendDataToNative('Response from React Native');
+            sendDataToNative(`Response from React Native : ${data.message}`);
         });
 
         return () => {

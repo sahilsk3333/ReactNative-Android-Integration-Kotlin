@@ -17,16 +17,22 @@ class MainActivity : AppCompatActivity() {
 
 
     private lateinit var binding: ActivityMainReactBinding
+    private lateinit var reactViewFragment: ReactViewFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityMainReactBinding.inflate(layoutInflater)
         setContentView(binding.root)
         super.onCreate(savedInstanceState)
         SoLoader.init(this, false)
+        reactViewFragment = ReactViewFragment.newInstance()
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(binding.reactUiContainerLayout.id, ReactViewFragment.newInstance())
+                .replace(binding.reactUiContainerLayout.id, reactViewFragment)
                 .commit()
+        }
+
+        binding.androidButton.setOnClickListener {
+            reactViewFragment.emitEventToReactApp()
         }
 
     }

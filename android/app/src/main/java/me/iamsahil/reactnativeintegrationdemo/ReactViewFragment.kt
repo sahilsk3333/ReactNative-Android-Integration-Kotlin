@@ -10,6 +10,8 @@ import com.facebook.react.PackageList
 import com.facebook.react.ReactInstanceManager
 import com.facebook.react.ReactPackage
 import com.facebook.react.ReactRootView
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReactContext
 import com.facebook.react.common.LifecycleState
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler
 import me.iamsahil.reactnativeintegrationdemo.databinding.FragmentReactViewBinding
@@ -19,6 +21,7 @@ class ReactViewFragment : Fragment() , DefaultHardwareBackBtnHandler {
 
     private var reactInstanceManager: ReactInstanceManager? = null
     private var reactRootView: ReactRootView? = null
+    private lateinit var reactContext: ReactContext
 
 
     private  var _binding : FragmentReactViewBinding? = null
@@ -50,13 +53,17 @@ class ReactViewFragment : Fragment() , DefaultHardwareBackBtnHandler {
             .setInitialLifecycleState(LifecycleState.RESUMED)
             .build()
 
-
         // Create React Root View
         reactRootView = ReactRootView(requireContext())
         reactRootView?.startReactApplication(reactInstanceManager, "MyReactNativeApp", null)
 
         // Add React Root View to FrameLayout using View Binding
         binding.root.addView(reactRootView)
+    }
+
+    fun emitEventToReactApp(){
+        val customModule = reactContext.catalystInstance.getNativeModule(MyCustomModule::class.java)
+        customModule?.sendEventToReactNative()
     }
 
     companion object {
@@ -70,7 +77,10 @@ class ReactViewFragment : Fragment() , DefaultHardwareBackBtnHandler {
 
     override fun onResume() {
         super.onResume()
-        reactInstanceManager?.onHostResume(activity, this)
+        reactInstanceManager?.onHostResume(requireActivity(), this)
+        reactInstanceManager?.addReactInstanceEventListener { context ->
+            reactContext = context
+        }
     }
 
     override fun onPause() {
