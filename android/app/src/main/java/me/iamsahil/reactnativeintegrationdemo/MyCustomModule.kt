@@ -12,8 +12,8 @@ class MyCustomModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
     }
 
     @ReactMethod
-    fun handleButtonClick() {
-        Toast.makeText(reactApplicationContext, "Button clicked from React Native", Toast.LENGTH_SHORT).show()
+    fun handleButtonClick(message: String) {
+        Toast.makeText(reactApplicationContext, message, Toast.LENGTH_SHORT).show()
     }
 
     @ReactMethod

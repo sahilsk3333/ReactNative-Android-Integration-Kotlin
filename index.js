@@ -19,7 +19,7 @@ const HelloWorld = () => {
     };
 
     const handleButtonClick = () => {
-        NativeModules.MyCustomModule.handleButtonClick();
+      NativeModules.MyCustomModule.handleButtonClick('Btn clicked from React Native');
     };
 
     return (
