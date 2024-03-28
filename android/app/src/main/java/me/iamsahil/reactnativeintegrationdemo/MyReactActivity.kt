@@ -11,64 +11,25 @@ import com.facebook.react.ReactRootView
 import com.facebook.react.common.LifecycleState
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler
 import com.facebook.soloader.SoLoader
+import me.iamsahil.reactnativeintegrationdemo.databinding.ActivityMainReactBinding
 
-class MainActivity : AppCompatActivity(), DefaultHardwareBackBtnHandler {
+class MainActivity : AppCompatActivity() {
 
-    private lateinit var reactRootView: ReactRootView
-    private lateinit var reactInstanceManager: ReactInstanceManager
+
+    private lateinit var binding: ActivityMainReactBinding
     override fun onCreate(savedInstanceState: Bundle?) {
+        binding = ActivityMainReactBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         super.onCreate(savedInstanceState)
         SoLoader.init(this, false)
-        reactRootView = ReactRootView(this)
-        val packages: MutableList<ReactPackage> = PackageList(application).packages
-        // Packages that cannot be autolinked yet can be added manually here, for example:
-         packages.add(MyReactNativePackage())
-        // Remember to include them in `settings.gradle` and `app/build.gradle` too.
-        reactInstanceManager = ReactInstanceManager.builder()
-            .setApplication(application)
-            .setCurrentActivity(this)
-            .setBundleAssetName("index.android.bundle")
-            .setJSMainModulePath("index")
-            .addPackages(packages)
-            .setUseDeveloperSupport(BuildConfig.DEBUG)
-            .setInitialLifecycleState(LifecycleState.RESUMED)
-            .build()
-        // The string here (e.g. "MyReactNativeApp") has to match
-        // the string in AppRegistry.registerComponent() in index.js
-        reactRootView.startReactApplication(reactInstanceManager, "MyReactNativeApp", null)
-        setContentView(reactRootView)
-    }
 
-    override fun invokeDefaultOnBackPressed() {
-        super.onBackPressed()
-    }
-
-    override fun onBackPressed() {
-        reactInstanceManager.onBackPressed()
-        super.onBackPressed()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        reactInstanceManager.onHostPause(this)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        reactInstanceManager.onHostResume(this, this)
-    }
-
-    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_MENU) {
-            reactInstanceManager.showDevOptionsDialog()
-            return true
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(binding.reactUiContainerLayout.id, ReactViewFragment.newInstance())
+                .commit()
         }
-        return super.onKeyUp(keyCode, event)
+
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        reactInstanceManager.onHostDestroy(this)
-        reactRootView.unmountReactApplication()
-    }
+
 }
