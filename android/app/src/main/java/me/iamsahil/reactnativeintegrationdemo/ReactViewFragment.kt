@@ -35,7 +35,6 @@ class ReactViewFragment : Fragment() , DefaultHardwareBackBtnHandler {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        reactRootView = ReactRootView(context)
         val packages: MutableList<ReactPackage> = PackageList(activity?.application).packages
 
         // Packages that cannot be autolinked yet can be added manually here, for example:
